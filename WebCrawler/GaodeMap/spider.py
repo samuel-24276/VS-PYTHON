@@ -182,16 +182,6 @@ def avg_index_info():
     os.chdir(r'D:\CODE\VS-Python\WebCrawler\GaodeMap')
     avg_index = pd.DataFrame(DATA)
     avg_index.to_csv('avg_index_data.csv', encoding='utf_8_sig')
-    os.chdir(r'D:\CODE\VS-C')
-    filename = 'avg_index_info.txt'
-    for info in DATA:
-        with open(filename, 'a') as f:  # 如果filename不存在会自动创建
-            f.write(str(info['a_indicator'])+'\t')
-            f.write(str(info['b_avg'])+'\t')
-            f.write(str(info['c_maxValue'])+'\t')
-            f.write(str(info['d_topCityName'])+'\t')
-            f.write(str(info['e_numGTAvg'])+'\n')
-        f.close()
     print('全国主要城市拥堵指数均值已保存到本地')
 
 
@@ -199,6 +189,6 @@ if __name__ == '__main__':
     now_allway_info()  # 实时全部道路拥堵排名
     allway_info()  # 近七天所有道路拥堵排名
     highway_info()  # 近七天高速公路拥堵排名
-    rrsdr_info()  # 道路运行速度偏差率
     avg_index_info()  # 全国主要城市拥堵指数均值
     index_info()  # 交通健康指数
+    rrsdr_info()  # 道路运行速度偏差率
