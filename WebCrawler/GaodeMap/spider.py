@@ -100,7 +100,7 @@ def highway_info():
 
 # 交通健康指数
 def index_info():
-    url = 'https://report.amap.com/ajax/cityDaily.do?cityCode=370200&dataType=' 
+    url = 'https://report.amap.com/ajax/cityDaily.do?cityCode=370200&dataType='
     info1 = requests.get(url+'1')  # 获取网址包含的信息:拥堵延时指数（%）
     info2 = requests.get(url+'2')  # 获取网址包含的信息:高延时运行时间占比（%）
     info3 = requests.get(url+'3')  # 获取网址包含的信息:拥堵路段里程比（%）
@@ -130,7 +130,7 @@ def index_info():
         sum_hlrr += data['b_hlrr']
         sum_mrcr += data['c_mrcr']
         sum_as += data['d_as']
-    filename = 'index_info.txt'# 将七天的均值存储到本地
+    filename = 'index_info.txt'  # 将七天的均值存储到本地
     with open(filename, 'a') as f:  # 如果filename不存在会自动创建
         f.write(str(sum_hlrr/7)+'\n')
         f.write(str(sum_mrcr/7)+'\n')
@@ -196,12 +196,9 @@ def avg_index_info():
 
 
 if __name__ == '__main__':
-    '''
     now_allway_info()  # 实时全部道路拥堵排名
     allway_info()  # 近七天所有道路拥堵排名
     highway_info()  # 近七天高速公路拥堵排名
-    
     rrsdr_info()  # 道路运行速度偏差率
     avg_index_info()  # 全国主要城市拥堵指数均值
-    '''
     index_info()  # 交通健康指数
