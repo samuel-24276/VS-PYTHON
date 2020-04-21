@@ -100,22 +100,15 @@ def highway_info():
 
 # 交通健康指数
 def index_info():
-    url1 = 'https://report.amap.com/ajax/cityDaily.do?cityCode=370200&dataType=1'  # 拥堵延时指数（%）
-    info1 = requests.get(url1)  # 获取网址包含的信息
+    url = 'https://report.amap.com/ajax/cityDaily.do?cityCode=370200&dataType=' 
+    info1 = requests.get(url+'1')  # 获取网址包含的信息:拥堵延时指数（%）
+    info2 = requests.get(url+'2')  # 获取网址包含的信息:高延时运行时间占比（%）
+    info3 = requests.get(url+'3')  # 获取网址包含的信息:拥堵路段里程比（%）
+    info4 = requests.get(url+'4')  # 获取网址包含的信息:平均车速（km/h)
     cdi = info1.json()  # 将获得信息格式化
-
-    url2 = 'https://report.amap.com/ajax/cityDaily.do?cityCode=370200&dataType=2'  # 高延时运行时间占比（%）
-    info2 = requests.get(url2)  # 获取网址包含的信息
     hlrr = info2.json()  # 将获得信息格式化
-
-    url3 = 'https://report.amap.com/ajax/cityDaily.do?cityCode=370200&dataType=3'  # 拥堵路段里程比（%）
-    info3 = requests.get(url3)  # 获取网址包含的信息
     mrcr = info3.json()  # 将获得信息格式化
-
-    url4 = 'https://report.amap.com/ajax/cityDaily.do?cityCode=370200&dataType=4'  # 平均车速（km/h)
-    info4 = requests.get(url4)  # 获取网址包含的信息
     a_s = info4.json()  # 将获得信息格式化
-
     # 将来自不同网址的数据存储到一个数组中
     DATA = []
     for i in range(7):
@@ -131,13 +124,13 @@ def index_info():
     index = pd.DataFrame(DATA)
     index.to_csv('index_data.csv', encoding='utf_8_sig')
     print('近七天指数数据已保存到本地')
-    os.chdir(r'C:\Users\DEll\Desktop\paper\data')
+    os.chdir(r'D:\CODE\VS-C')
     sum_hlrr = sum_mrcr = sum_as = 0
     for data in DATA:
         sum_hlrr += data['b_hlrr']
         sum_mrcr += data['c_mrcr']
         sum_as += data['d_as']
-    filename = 'index_info.txt'
+    filename = 'index_info.txt'# 将七天的均值存储到本地
     with open(filename, 'a') as f:  # 如果filename不存在会自动创建
         f.write(str(sum_hlrr/7)+'\n')
         f.write(str(sum_mrcr/7)+'\n')
@@ -159,7 +152,7 @@ def rrsdr_info():
     index = pd.DataFrame(DATA)
     index.to_csv('rrsdr_data.csv', encoding='utf_8_sig')
     print('道路运行速度偏差率数据已保存到本地')
-    os.chdir(r'C:\Users\DEll\Desktop\paper\data')
+    os.chdir(r'D:\CODE\VS-C')
     filename = 'index_info.txt'
     sum_rrsdr = 0
     for info in DATA:
@@ -176,7 +169,6 @@ def avg_index_info():
     url = 'https://report.amap.com/diagnosis/ajax/countryindicators.do'
     info = requests.get(url)  # 获取网址包含的信息
     index_info = info.json()  # 将获得信息格式化
-
     for index in index_info:
         data = {
             'a_indicator': index['indicator'],
@@ -190,8 +182,7 @@ def avg_index_info():
     os.chdir(r'D:\CODE\VS-Python\WebCrawler\GaodeMap')
     avg_index = pd.DataFrame(DATA)
     avg_index.to_csv('avg_index_data.csv', encoding='utf_8_sig')
-    print('全国主要城市拥堵指数均值已保存到本地')
-    os.chdir(r'C:\Users\DEll\Desktop\paper\data')
+    os.chdir(r'D:\CODE\VS-C')
     filename = 'avg_index_info.txt'
     for info in DATA:
         with open(filename, 'a') as f:  # 如果filename不存在会自动创建
@@ -201,12 +192,16 @@ def avg_index_info():
             f.write(str(info['d_topCityName'])+'\t')
             f.write(str(info['e_numGTAvg'])+'\n')
         f.close()
+    print('全国主要城市拥堵指数均值已保存到本地')
 
 
 if __name__ == '__main__':
+    '''
     now_allway_info()  # 实时全部道路拥堵排名
     allway_info()  # 近七天所有道路拥堵排名
     highway_info()  # 近七天高速公路拥堵排名
-    index_info()  # 交通健康指数
+    
     rrsdr_info()  # 道路运行速度偏差率
     avg_index_info()  # 全国主要城市拥堵指数均值
+    '''
+    index_info()  # 交通健康指数
