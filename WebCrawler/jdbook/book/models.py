@@ -12,7 +12,7 @@ class BookInfo(models.Model):
     author = models.CharField(max_length=50, default="无", verbose_name="作者")
     store = models.CharField(max_length=100, default="无", verbose_name="出版社")
     price = models.DecimalField(decimal_places=2, max_digits=10, default="0.00", verbose_name="价格")
-    default_image = models.ImageField(null=True, verbose_name="图片")
+    default_image = models.ImageField(max_length=200, null=True, verbose_name="图片")
 
     class Meta:  # 别名
         verbose_name = "图书"
