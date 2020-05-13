@@ -29,7 +29,7 @@ class BookSpider(scrapy.Spider):
     def parse_book(self, response):
         # 取字典
         item = response.meta.get('book')
-        url = response.
+        # url = response.
         print('*'*100)
         print(response)
         print('*'*100)
