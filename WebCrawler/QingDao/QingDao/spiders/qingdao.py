@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
-# import requests
+import requests
 import re
 
 
@@ -11,26 +11,63 @@ class QingdaoSpider(scrapy.Spider):
     def parse(self, response):
         content = response.text
         pattern = r'[{|}}]'
-        cont = re.split(pattern, content)
+        cont = re.split(pattern, content)   # 以{}为分隔符将文本切割为列表
         
         DATA = []
-        for r in cont:
-            city_name = re.sub("[A-Z|a-z|0-9|\[|\]|\,|\'|\"|\:|\.|\-]", "", r)
-            # print(city)
+        for r in cont[:20]:
+            city_name = re.sub(r"[A-Z|a-z|0-9|\[|\]|\,|\'|\"|\:|\.|\-]", "", r)  # 获得城市名字
+            
+            # re.sub('[\u4e00-\u9fa5]')正则表达式提取中文
+            city = {}
+            city['name'] = city_name
             number = re.sub('[\u4e00-\u9fa5:a-zA-Z\"-]', '', r)
             # print(number)
-            
-            label = re.search('\\d{6}', number)
+            label = re.search('\\d{6}', number)  # 搜索城市编号
             if label:
-                city = {'name': city_name, 'label': label.group()}
-                DATA.append(city)
-                # print(label.group())  
+                # city = {'name': city_name, 'label': label.group()}
+                city['label'] = label.group()
+                dym = 'https://report.amap.com/ajax/cityDaily.do?cityCode'
+                index = 'dataType='
+                url = dym + city['label'] + index
+                info1 = requests.get(url + '1')  # 拥堵延时指数（%）
+                # arr_cdi = info1.json()
+                print(arr_cdi)
+                # print(label.group() )  
             else:
                 pass
             
-        for data in DATA:
-            print(data)
+            # url1 = url + city['label'] + index + '1'
+            # print(url1)
+            # info1 = requests.get(url1)  # 拥堵延时指数（%）
             
+            # DATA.append(city)
+            # print(city)
+            """
+            url = 'https://report.amap.com/ajax/cityDaily.do?cityCode'
+            index = 'dataType='
+            url1 = url + str(city['label']) + index + '1'
+            info1 = requests.get(url1)  # 拥堵延时指数（%）
+            
+            info2 = requests.get(url + city['label'] + index + '2')  # 高延时运行时间占比（%）
+            info3 = requests.get(url + city['label'] + index + '3')  # 拥堵路段里程比（%）
+            info4 = requests.get(url + city['label'] + index + '4')  # 平均车速（km/h)
+            arr_cdi = info1.json()  # 将获得信息格式化
+            arr_hlrr = info2.json()  # 将获得信息格式化
+            arr_mrcr = info3.json()  # 将获得信息格式化
+            arr_speed = info4.json()  # 将获得信息格式化
+            # 将来自不同网址的数据存储到一个数组中
+            # DATA = []
+            cdi = hlrr = mrcr = speed = 0
+            for i in range(7):                
+                cdi += arr_cdi[i][1]
+                hlrr += arr_hlrr[i][1]
+                mrcr += arr_mrcr[i][1]
+                speed += arr_speed[i][1]
+            print(cdi/7)
+            print(hlrr/7)
+            print(mrcr/7)
+            print(speed/7)
+        """
         """
         for city in city_list:
             
