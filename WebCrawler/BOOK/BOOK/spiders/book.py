@@ -22,7 +22,6 @@ class BookSpider(scrapy.Spider):
                 # 小分类链接需要拼接
                 samll_link = 'http:' + em.xpath('./a/@href').extract_first()
                 # print(item)
-                
                 # 发送请求获取小分类里的图书列表,调用parse_book()函数
                 yield scrapy.Request(samll_link, callback=self.parse_book, meta={'book': item})
 
@@ -31,11 +30,10 @@ class BookSpider(scrapy.Spider):
         item = response.meta.get('book')
         # url = response.
         print('*'*100)
-        print(response)
+        # print(response)
         print('*'*100)
         # 解析所有数据
         list_book = response.xpath('//*[@id="J_goodsList"]/ul/li[@ware-type!="0"]/div')
-        """
         # 遍历解析60本书的数据
         for book in list_book:
             # 书名，用相对路径./解析
@@ -49,4 +47,3 @@ class BookSpider(scrapy.Spider):
             # 默认图片
             item['default_img'] = 'http:' + book.xpath('.//div[@class="p-img"]/a//img/@src').extract_first().strip()
             yield item
-        """

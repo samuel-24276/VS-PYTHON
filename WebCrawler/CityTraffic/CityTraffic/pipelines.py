@@ -4,11 +4,11 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-from QingDao import settings
+from CityTraffic import settings
 import pymysql
 
 
-class QingdaoPipeline(object):
+class CitytrafficPipeline(object):
     # 1.python和mysql服务建立关系
     def open_spider(self, spider):
         # 链接成功
@@ -29,7 +29,7 @@ class QingdaoPipeline(object):
 
         try:
             # 1.写 sql语句
-            sql = 'insert into book_bookinfo values(%s,%s,%s,%s);'
+            sql = 'insert into map_mapinfo values(%s,%s,%s,%s,%s,%s,%s,%s);'
 
             # 格式处理，把字典类型变为列表
             items_list = list(item.values())
