@@ -14,7 +14,7 @@ class CitySpider(scrapy.Spider):
         pattern = r'[{|}}]'
         # 以{}为分隔符将文本切割为列表
         cont = re.split(pattern, content)
-        for r in cont[:20]:
+        for r in cont[:30]:
             city_name = re.sub(r"[A-Z|a-z|0-9|\[|\]|\,|\'|\"|\:|\.|\-]", "", r)  # 获得城市名字
             # re.sub('[\u4e00-\u9fa5]')正则表达式提取中文
             city = {}
