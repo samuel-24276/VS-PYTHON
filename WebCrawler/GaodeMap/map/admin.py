@@ -8,7 +8,7 @@ from .models import MapInfo
 
 class MapInfoAdmin(admin.ModelAdmin):
     # 设置 列表页 显示字段名字的
-    list_display = ['id', 'label', 'name', 'cdi', 'hlrr', 'mrcr', 'speed', 'rrsdr']
+    list_display = ['id', 'label', 'name', 'hlrr', 'mrcr', 'speed', 'rrsdr']  # 'cdi',
 
 
 # 注册模型类 到 admin站点里面去

@@ -6,7 +6,7 @@ from django.db import models
 class MapInfo(models.Model):
     label = models.CharField(max_length=100, null=False, verbose_name="城市编号")
     name = models.CharField(max_length=200, default="无", verbose_name="城市")
-    cdi = models.CharField(max_length=200, default="无", verbose_name="交通拥堵指数")
+    # cdi = models.CharField(max_length=200, default="无", verbose_name="交通拥堵指数")
     hlrr = models.CharField(max_length=200, default="无", verbose_name="高延时运行时间占比")
     mrcr = models.CharField(max_length=200, default="无", verbose_name="拥堵路段里程比")
     speed = models.CharField(max_length=200, default="无", verbose_name="平均速度")

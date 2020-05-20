@@ -29,7 +29,7 @@ class CitytrafficPipeline(object):
 
         try:
             # 1.写 sql语句
-            sql = 'insert into map_mapinfo values(%s,%s,%s,%s,%s,%s,%s,%s);'
+            sql = 'insert into map_mapinfo values(%s,%s,%s,%s,%s,%s,%s);'  # %s,
 
             # 格式处理，把字典类型变为列表
             items_list = list(item.values())

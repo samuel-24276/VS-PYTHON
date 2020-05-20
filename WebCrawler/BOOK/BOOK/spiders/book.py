@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import re
-import requests
 
 
 """
@@ -55,6 +54,8 @@ class BookSpider(scrapy.Spider):
             item['default_img'] = 'http:' + book.xpath('.//div[@class="p-img"]/a//img/@src').extract_first()
             yield item
 """
+
+
 class BookSpider(scrapy.Spider):
     name = 'book'
     allowed_domains = ['jd.com']
@@ -62,35 +63,42 @@ class BookSpider(scrapy.Spider):
     start_urls = ['https://book.jd.com/booksort.html']
 
     def parse(self, response):
-        dt_list = response.xpath('//*[@id="booksort"]/div[2]/dl/dt[1]')  # 爬取第1个大分类
+        dt_list = response.xpath('//*[@id="booksort"]/div[2]/dl/dt')  # 爬取第1个大分类
         # 遍历52个大分类
-        for dt in dt_list:
+        for dt in dt_list[:2]:  # 爬取11个大类
             item = {}
-            # 解析大分类名字
-            item['category'] = dt.xpath('./a/text()').extract_first()
             # 根据大分类取小分类
             em_list = dt.xpath('./following-sibling:: *[1]/em')
+            # yield scrapy.Request(em_list, callback=self.parse_category, meta={'book': item})
             for em in em_list[:2]:  # 每个大分类取两个小分类
-                item['small_category'] = em.xpath('./a/text()').extract_first()
                 # 小分类链接需要拼接
                 content = em.xpath('./a/@href').extract_first()
                 cont = re.sub(r"[a-z|\:|\.|/]", "", content)
-                index = 'https://list.jd.com/list.html?cat=' + cont + '&page='                
+                index = 'https://list.jd.com/list.html?cat=' + cont + '&page='
                 small_link = re.sub(r'-', '%2C', index)
-                # temp = requests.get(small_link)
-                # page = int(temp.xpath('//*[@id="J_bottomPage"]/span[2]/em[1]/b'))
                 s = -26
-                for i in range(1, 201):
+                for i in range(1):
                     s = s * 1 + 26
                     link = small_link + str(i) + '&s=' + str(s) + '&click=0'
-                    # 发送请求获取小分类里的图书列表,调用parse_book()函数
+                    # 解析大分类名字
+                    item['category'] = dt.xpath('./a/text()').extract_first()
+                    item['small_category'] = em.xpath('./a/text()').extract_first()
                     yield scrapy.Request(link, callback=self.parse_book, meta={'book': item})
+        # 发送请求获取小分类里的图书列表,调用parse_book()函数
+        # yield scrapy.Request(link, callback=self.parse_book, meta={'book': item})
+
+    def parse_category(self, response):
+        item = response.meta.get('book')
+        print('*'*100)
+        print(item)
 
     def parse_book(self, response):
         # 取字典
         item = response.meta.get('book')
         list_book = response.xpath('//*[@id="J_goodsList"]/ul/li[@ware-type!="0"]/div')
-        # print(list_book)
+        print('*'*100)
+        print(item)
+        """
         # 遍历解析52本书的数据,书的数量在不同的日期是变化的，为了反爬
         for book in list_book:
             # 书名，用相对路径./解析
@@ -103,4 +111,5 @@ class BookSpider(scrapy.Spider):
             item['price'] = book.xpath('.//div[@class="p-price"]/strong/i/text()').extract_first()
             # 默认图片
             item['default_img'] = 'http:' + book.xpath('.//div[@class="p-img"]/a//img/@src').extract_first()
-            yield item
+            # yield item
+"""
